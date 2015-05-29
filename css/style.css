@@ -1,0 +1,64 @@
+	body {
+		margin-top: 15px;
+	}
+
+
+	#storeMapImg {
+		width: 100%;
+		border-radius: 10px;
+		border-width: 3px;
+		border-style: dotted;
+		border-color: rgb(130,130,130);
+
+	}
+
+	#infobox {
+		text-align: center;
+	}
+
+	.avatarImgCol{
+
+	}
+
+	.avatarImg {
+		width: 100%;
+		border-radius: 5px;
+	}
+
+	.draggableCustomer {
+		  margin: 10px;
+		  border-radius: 15px;
+		  border-width: 1px;
+		  border-style: dotted;
+		  border-color: rgb(130,130,130);
+		  opacity: 0.95;
+	}
+
+	.draggableCustomer h4 {
+		 margin-top: 10px;
+		 margin-bottom: 5px;
+	}
+	  
+	.beaconPlace.editable {
+		opacity: 0.8 !important;
+	}
+
+
+	.beaconPlace {
+		opacity: 0;
+		color: white;
+		text-align: center;
+	}
+
+
+
+	.vcenter {
+	    display: inline-block;
+	    vertical-align: middle;
+	    float: none;
+	}
+
+	#config-panel{
+		  text-align: right;
+		  padding: 15px;
+	}
