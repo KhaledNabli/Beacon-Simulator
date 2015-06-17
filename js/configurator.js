@@ -45,6 +45,7 @@ function saveConfiguration() {
 	refreshCustomers(demoScenario.customerList);
 	refreshBeacons(demoScenario.beaconList);
 	closeConfigurator();
+	window.localStorage.demoScenario = JSON.stringify(demoScenario);
 }
 
 function showConfigurator() {
@@ -59,6 +60,7 @@ function closeConfigurator() {
 function resetConfiguration() {
 	$("#configuratorCustomerTbody tr").remove();
 	$("#configuratorBeaconTbody tr").remove();
+	demoScenario = defaultDemoScenario;
 	refreshConfigurator(demoScenario);
 }
 
@@ -72,8 +74,6 @@ function configAddCustomer(customerObj) {
 	var newEntry = customerObj == undefined || customerObj.id == undefined;
 	var color = (newEntry || customerObj.color == undefined) ? getRandomeColor() : customerObj.color;
 	var newEntryId = newEntry ? (9 + Math.ceil(99999 * Math.random())) : customerObj.id;
-
-	console.log(newEntry);
 	htmlTag = "<tr style='background-color: " + color + "'" +">"
 		+"<td><input name='id' type='number' placeholder='ID' value='"+ (newEntry ? newEntryId : customerObj.id) +"'   class='form-control input-md'/>" +  "</td>"
 		+"<td><input name='label' type='text' placeholder='Label' value='"+ (newEntry ? "" : customerObj.label) +"'   class='form-control input-md'/>" +  "</td>"
@@ -119,7 +119,6 @@ function configAddBeacon(beaconObj) {
 	var color = (newEntry || beaconObj.color == undefined) ? getRandomeColor() : beaconObj.color;
 	var newEntryId = newEntry ? (9 + Math.ceil(99999 * Math.random())) : beaconObj.id;
 
-	console.log(newEntry);
 	htmlTag = "<tr style='background-color: " + color + "'" +">"
 		+"<td><input name='id' type='number' placeholder='ID' value='"+ (newEntry ? newEntryId : beaconObj.id) +"'   class='form-control input-md'/>" +  "</td>"
 		+"<td><input name='label' type='text' placeholder='Label' value='"+ (newEntry ? "" : beaconObj.label) +"'   class='form-control input-md'/>" +  "</td>"

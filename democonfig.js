@@ -1,29 +1,30 @@
 
 
-var demoScenario = {};
-
+var defaultDemoScenario = {};
 
 
 //var espBeaconWindow = "http://sasbap.demo.sas.com:44444/inject/PaybackPoc/PaybackUseCases/BeaconEventSource?blocksize=1";
-demoScenario.espBeaconWindow = "http://sasbap.demo.sas.com:44444/inject/BeaconDetection/InStoreQuery/BeaconServer?blocksize=1";
-demoScenario.espProfileWindow = "";
-demoScenario.storeMapImg = "img/storemap.png";
+defaultDemoScenario.espBeaconWindow = "http://pdcesx06131.exnet.sas.com:8081/inject/BeaconDetection/InStoreQuery/BeaconServer?blocksize=1";
+defaultDemoScenario.espProfileWindow = "";
+defaultDemoScenario.storeMapImg = "img/storemap.png";
+defaultDemoScenario.storeMapOrigWidth = 1704;
+defaultDemoScenario.storeMapScale = 1;
 
 
-demoScenario.currentStore = "rewe";
+defaultDemoScenario.currentStore = "rewe";
 
-demoScenario.storeList = [{id:"rewe", label:"Rewe Store", img:"img/storemap.png"}];
+defaultDemoScenario.storeList = [{id:"rewe", label:"Rewe Store", img:"img/storemap.png"}];
 
-demoScenario.customerList = [
+defaultDemoScenario.customerList = [
 	{id:1, label: "Khaled", age: 29, color: "aquamarine", 	img: "img/lahm.jpg", 		mobilenr: "+41795095890"}, 
 	{id:2, label: "Claudia", age: 41, color: "aliceblue", 	img: "img/boateng.jpg", 	mobilenr: ""}, 
-	{id:3, label: "Roland", age: 37, color: "blanchedalmond", img: "img/javi.jpg", 		mobilenr: ""},
+	{id:3, label: "Roland", age: 37, color: "blanchedalmond",   img: "img/javi.jpg", 		mobilenr: ""},
 	{id:4, label: "Christian", age: 32, color: "honeydew", 	img: "img/alaba.jpg", 		mobilenr: ""},
 	{id:5, label: "Sigi", age: 27, color: "seashell", 		img: "img/frank.jpg", 		mobilenr: ""},
 ];
 
 
-demoScenario.beaconList = [
+defaultDemoScenario.beaconList = [
 	{id:1, label: "Seafood", 		position:{top: 280, left: 560}, size:{height: 140, width: 140}, color:"red", store:"rewe"}, 
 	{id:2, label: "Pasta Meals", 	position:{top: 100, left: 60}, size:{height: 160, width: 280}, color:"darkgreen", store:"rewe"}, 
 	{id:3, label: "Deli", 			position:{top: 40, left: 400}, size:{height: 180, width: 200}, color:"blue", store:"rewe"},

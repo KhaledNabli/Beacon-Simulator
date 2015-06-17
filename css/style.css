@@ -1,8 +1,11 @@
 	body {
-		margin-top: 15px;
 	}
 
 	#storeMapWrapper {
+		position: relative;
+	}
+
+	#storeMap {
 		position: relative;
 	}
 
@@ -18,22 +21,27 @@
 		text-align: center;
 	}
 
-	.avatarImgCol{
+	.draggableCustomer > .col-xs-6{
+		padding-right: 0px;
+		padding-left: 0px;
 
 	}
 
 	.avatarImg {
-		width: 100%;
-		border-radius: 5px;
+		max-width: 75px;
+		max-height: 75px;
+		margin: 0px;
 	}
 
 	.draggableCustomer {
-		  margin: 10px;
+		  /*margin: 3px;*/
 		  border-radius: 15px;
 		  border-width: 1px;
 		  border-style: dotted;
 		  border-color: rgb(130,130,130);
 		  opacity: 0.95;
+		  min-height: 80px;
+		  max-width: 100%;
 	}
 
 	.draggableCustomer h4 {
@@ -60,7 +68,9 @@
 	    float: none;
 	}
 
-	#config-panel{
+	#config-panel {
 		  text-align: right;
-		  padding: 15px;
+		  padding-left: 15px;
+		  padding-right: 15px;
+		  margin: 5px;
 	}
