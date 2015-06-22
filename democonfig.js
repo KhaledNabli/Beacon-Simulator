@@ -6,6 +6,11 @@ var defaultDemoScenario = {};
 //var espBeaconWindow = "http://sasbap.demo.sas.com:44444/inject/PaybackPoc/PaybackUseCases/BeaconEventSource?blocksize=1";
 defaultDemoScenario.espBeaconWindow = "http://pdcesx06131.exnet.sas.com:8081/inject/BeaconDetection/InStoreQuery/BeaconServer?blocksize=1";
 defaultDemoScenario.espProfileWindow = "";
+
+defaultDemoScenario.rtdmHost = "sasbap.demo.sas.com";
+defaultDemoScenario.rtdmEvent = "ESP_Beacon_Get_Customer_Profile";
+
+
 defaultDemoScenario.storeMapImg = "img/storemap.png";
 defaultDemoScenario.storeMapOrigWidth = 1704;
 defaultDemoScenario.storeMapScale = 1;

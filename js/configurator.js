@@ -13,7 +13,10 @@ function initConfigurator() {
 */
 function refreshConfigurator(demoScenario) {
 	$("#demoEspHostInput").val(demoScenario.espBeaconWindow);
+	$("#demoRtdmHostInput").val(demoScenario.rtdmHost);
 	$("#storeMapImgInput").val(demoScenario.storeMapImg);
+
+
 	$.each(demoScenario.customerList, function (index) {
 		configAddCustomer(demoScenario.customerList[index]);
 	});
@@ -31,6 +34,7 @@ function refreshConfigurator(demoScenario) {
 */
 function updateConfiguration() {
 	demoScenario.espBeaconWindow = $("#demoEspHostInput").val();
+	demoScenario.rtdmHost = $("#demoRtdmHostInput").val(); 
 	demoScenario.storeMapImg = $("#storeMapImgInput").val();
 	demoScenario.customerList = configGetCustomersFromUi();
 	demoScenario.beaconList = configGetBeaconsFromUi();

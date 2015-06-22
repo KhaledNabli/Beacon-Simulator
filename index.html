@@ -7,6 +7,9 @@
     <link rel="apple-touch-icon" href="images/sas_icon.png"/>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/jqueryui/dataTables.jqueryui.css" />
+    <!--link rel="stylesheet" type="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" /-->
     <link href="css/style.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -42,10 +45,38 @@
 
     </div>
 
+    <div id="customerInfoDialog" title="Customer Profile" style="display: none;">
+        <p>Name: <span id="dialogCustomerName"> ... </span> </p>
+        <p>Age: <span id="dialogCustomerAge"> ... </span> </p>
+        <p>Phone: <span id="dialogCustomerPhone"> ... </span> </p>
+        <p>Segment: <span id="dialogCustomerSegment"> ... </span> </p>
+        <p>Avg Turnover: <span id="dialogCustomerAvgTurnOver"> ... </span> </p>
+        <p>Visits last 4 weeks: <span id="dialogCustomerVisitsLst4Weeks"> ... </span> </p>
+        <!--p>Last Offer: <span id="dialogCustomerLstOffer"> ... </span> </p-->
+
+
+        <table id="customerInfoDialogCHTab" class="display compact" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Campaign</th>
+                    <th>Segment</th>
+                    <th>Offer</th>
+                    <th>Info 1</th>
+                    <th>Info 2</th>
+                </tr>
+            </thead>
+     
+        </table>
+    </div>
+
 
     <div id="demoConfigurator"></div>
     <script src="js/jquery-1.11.1.js" type="text/javascript"></script>
     <script src="js/jquery-ui.js" type="text/javascript"></script>
+    <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <!--script src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js" type="text/javascript"></script-->
+    <script src="//cdn.datatables.net/plug-ins/1.10.7/integration/jqueryui/dataTables.jqueryui.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/jquery.ui.touch-punch.js"></script>
     <script src="democonfig.js" type="text/javascript"></script>

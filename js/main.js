@@ -1,5 +1,5 @@
 var demoScenario = {};
-
+var contactHistoryTab = {};
 
 
 function loadDemo() {
@@ -11,6 +11,11 @@ function loadDemo() {
 	refreshCustomers(demoScenario.customerList);
 	refreshBeacons(demoScenario.beaconList);
 	$("#saveBeaconPosition").hide();
+	
+
+    
+	contactHistoryTab = $('#customerInfoDialogCHTab').DataTable({ bJQueryUI: true, jQueryUI: true , "paging": false, "ordering": false, "info": false });
+	$("#customerInfoDialog").dialog({autoOpen: false, resizable: false, width:750, hide: "explode"});
 }
 
 function setupConfiguration() {
@@ -67,6 +72,12 @@ function refreshCustomers(customerList) {
 		$("#customer-list").append(customerDivOuter);
 	});
 	$( ".draggableCustomer" ).draggable();
+	$( ".draggableCustomer" ).on('tap', function() {
+  		displayCustomerProfile(this);
+	});
+	$( ".draggableCustomer" ).on('click', function() {
+  		displayCustomerProfile(this);
+	});
 }
 
 function refreshBeacons(beaconList) {
@@ -131,7 +142,7 @@ function processBeaconEvent(beaconId, customerId) {
 	//var espEventCsv = "i,n,,"+ (customerList[customerIndex].memberid) +","+ (beaconIndex+1) +",rewe,"+espEventDttm+","+beaconList[beaconIndex].label+"\r\n";
 
 	var espEventDttm = getCurrentTimestamp()
-	var espEventCsv = "i,n,,"+ (demoScenario.customerList[customerIndex].id) +","+ (demoScenario.beaconList[beaconIndex].id) +","+ (demoScenario.customerList[customerIndex].label) +"," + (demoScenario.beaconList[beaconIndex].label) +","+ espEventDttm+","+ (demoScenario.customerList[customerIndex].mobilenr) +"\r\n";
+	var espEventCsv = "i,n,,"+ (demoScenario.customerList[customerIndex].id) +","+ (demoScenario.beaconList[beaconIndex].id) +","+ (demoScenario.customerList[customerIndex].label) +"," + (demoScenario.beaconList[beaconIndex].label) +","+ espEventDttm+","+ (demoScenario.customerList[customerIndex].mobilenr) + ","+ (demoScenario.customerList[customerIndex].age) +"\r\n";
 	
 
 	publishEspEvent(demoScenario.espBeaconWindow, espEventCsv);
@@ -153,6 +164,9 @@ function publishEspEvent(windowUrl, eventCsv) {
 		url: windowUrl,
 		contentType : "text/csv",
 		data: eventCsv})
+	.error(function (responseXml, status) {
+		alert("ERROR: Can not connect to ESP!\nPlease check connection details.");
+	})
 	.always(function(responseXml, status) {
 		console.log(responseXml);
 	});
@@ -188,11 +202,98 @@ function saveBeaconPosition(){
 	$("#saveBeaconPosition").hide();
 }
 
-function windowsResize(event) {
-	if(event.target === window) {
-		refreshBeacons(demoScenario.beaconList);
-	}
+
+
+function displayCustomerProfile(element) {
+	var customerId = parseDivId("customer_div_", element.id);
+	var customerIndex = findObjectById(demoScenario.customerList, customerId);
+	console.log("Display Customer Profile for : " + element.id + " Index: " + customerIndex);
+	$("#customerInfoDialog").dialog({'title': 'Profile of ' + demoScenario.customerList[customerIndex].label});
+	$('#dialogCustomerName').html(demoScenario.customerList[customerIndex].label);
+	$('#dialogCustomerAge').html(demoScenario.customerList[customerIndex].age);
+	$('#dialogCustomerPhone').html(demoScenario.customerList[customerIndex].mobilenr);
+	contactHistoryTab.clear().draw();
+
+	readCustomerProfileFromRtdm(customerId);
+
+	$("#customerInfoDialog").dialog('open');
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+function readCustomerProfileFromRtdm(customerId) {
+	var rtdmRequestUrl = "http://" + demoScenario.rtdmHost + "/SASDecisionServices/rest/runtime/decisions/" + demoScenario.rtdmEvent;
+	var contentType = 'application/vnd.sas.decision.request+json';
+	//var rtdmRequestUrl = "http://" + rtdmHost + ( rtdmPort != undefined ? ":" + rtdmPort : '') + "/SASDecisionServices/rest/runtime/decisionDefinitions/" + rtdmEvent; 
+	//var contentType = 'application/vnd.sas.decision.definition+json';
+	var rtdmRequest = {"version" : "", "clientTimeZone" : "", "inputs":{}};
+	rtdmRequest.clientTimeZone = "EST";
+	rtdmRequest.version= 1;
+	
+
+	rtdmRequest.inputs.MemberID = customerId;
+	console.log(JSON.stringify(rtdmRequest));
+
+	$.ajax({
+		method: "POST",
+		contentType: contentType,
+		url: rtdmRequestUrl,
+		data: JSON.stringify(rtdmRequest)
+	})
+	.done(function( rtdmResponse ) {
+		console.log(rtdmResponse);
+		$('#dialogCustomerAvgTurnOver').html(rtdmResponse.outputs["AvgTurnover"]);
+		$('#dialogCustomerSegment').html(rtdmResponse.outputs["Segment"]);
+		$('#dialogCustomerVisitsLst4Weeks').html(rtdmResponse.outputs["VisitsLst4Weeks"]);
+		$('#dialogCustomerLstOffer').html(rtdmResponse.outputs["LstOffer"]);
+		
+		var dataSet = rtdmResponse.outputs["ContactHistory"][1].data;
+		$.each(dataSet, function(index) {
+			/*var tabRowObj = {
+		        "date":        dataSet[index][0],
+		        "campaign":    dataSet[index][1],	
+		        "segment":     dataSet[index][2],	
+		        "offer":     	dataSet[index][3],
+		       // "extInfo1":     dataSet[index][4],
+		       // "extInfo2":      dataSet[index][5]
+		    };
+
+		    console.log(tabRowObj);
+		    */
+
+		    var entryDate = new Date(dataSet[index][0]);
+		    var entryDateTxt = entryDate.getFullYear() + "-" + (entryDate.getMonth()+1) + "-" + entryDate.getDate() + " " + entryDate.getHours() + ":" + entryDate.getMinutes();
+		    contactHistoryTab.row.add([entryDateTxt, dataSet[index][1], dataSet[index][2], dataSet[index][3], dataSet[index][4], dataSet[index][5]]);
+		});
+
+		
+		contactHistoryTab.draw();
+		//contactHistoryTab = $('#customerInfoDialogCHTab').DataTable(
+
+	});
+}
+
+
+function windowsResize(event) {
+
+	if(event.target === window) {
+		console.log("resize window");
+		refreshBeacons(demoScenario.beaconList);
+	}
+	else {
+		console.log("resize " + event.type);
+		event.stopPropagation();
+	}
+}
 
 
