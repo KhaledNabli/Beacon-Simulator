@@ -50,6 +50,7 @@ function saveConfiguration() {
 	refreshBeacons(demoScenario.beaconList);
 	closeConfigurator();
 	window.localStorage.demoScenario = JSON.stringify(demoScenario);
+	connectToProvider('saveScenario', demoScenario);
 }
 
 function showConfigurator() {
@@ -217,4 +218,8 @@ function renderColorList(selectedColor) {
 
 function getRandomeColor() {
 	return colors[Math.ceil(colors.length * Math.random())];
+}
+
+function getRandomeDarkColor() {
+	return darkcolors[Math.ceil(darkcolors.length * Math.random())];
 }

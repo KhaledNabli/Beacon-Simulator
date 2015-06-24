@@ -1,5 +1,5 @@
 var demoScenario = {};
-var contactHistoryTab = {};
+//var contactHistoryTab = {};
 
 
 function loadDemo() {
@@ -14,8 +14,8 @@ function loadDemo() {
 	
 
     
-	contactHistoryTab = $('#customerInfoDialogCHTab').DataTable({ bJQueryUI: true, jQueryUI: true , "paging": false, "ordering": false, "info": false });
-	$("#customerInfoDialog").dialog({autoOpen: false, resizable: false, width:750, hide: "explode"});
+	//contactHistoryTab = $('#customerInfoDialogCHTab').DataTable({ bJQueryUI: true, jQueryUI: true , "paging": false, "ordering": false, "info": false });
+	$("#customerInfoDialog").dialog({autoOpen: false, resizable: false, height:450, width:750, hide: "explode"});
 }
 
 function setupConfiguration() {
@@ -38,6 +38,7 @@ function loadConfiguration() {
 		console.log("Loading demoScenario from localStorage");
 		demoScenario = JSON.parse(window.localStorage.demoScenario);
 	}
+	connectToProvider('', demoScenario);
 	return demoScenario;
 }
 
@@ -135,11 +136,7 @@ function processBeaconEvent(beaconId, customerId) {
 	if(customerIndex < 0 || beaconIndex < 0)
 		return;
 
-	$("#infobox").html(demoScenario.customerList[customerIndex].label + " ist bei " + demoScenario.beaconList[beaconIndex].label + " angekommen");
-	/*
-	EventId*:int64,MemberId:int32,BeaconId:int32,PartnerId:int32,EventDttm:stamp
-	*/
-	//var espEventCsv = "i,n,,"+ (customerList[customerIndex].memberid) +","+ (beaconIndex+1) +",rewe,"+espEventDttm+","+beaconList[beaconIndex].label+"\r\n";
+	//$("#infobox").html(demoScenario.customerList[customerIndex].label + " ist bei " + demoScenario.beaconList[beaconIndex].label + " angekommen");
 
 	var espEventDttm = getCurrentTimestamp()
 	var espEventCsv = "i,n,,"+ (demoScenario.customerList[customerIndex].id) +","+ (demoScenario.beaconList[beaconIndex].id) +","+ (demoScenario.customerList[customerIndex].label) +"," + (demoScenario.beaconList[beaconIndex].label) +","+ espEventDttm+","+ (demoScenario.customerList[customerIndex].mobilenr) + ","+ (demoScenario.customerList[customerIndex].age) +"\r\n";
@@ -151,7 +148,7 @@ function processBeaconEvent(beaconId, customerId) {
 
 function getCurrentTimestamp() {
 	var currentDate = new Date();
-	return ("" + currentDate.getFullYear() + "-" + (currentDate.getMonth()+1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds());
+	return $.format.date(currentDate, "dd.MM.yyyy HH:mm");
 }
 
 function parseDivId(divPrefix, divId) {
@@ -212,7 +209,14 @@ function displayCustomerProfile(element) {
 	$('#dialogCustomerName').html(demoScenario.customerList[customerIndex].label);
 	$('#dialogCustomerAge').html(demoScenario.customerList[customerIndex].age);
 	$('#dialogCustomerPhone').html(demoScenario.customerList[customerIndex].mobilenr);
-	contactHistoryTab.clear().draw();
+	if(demoScenario.customerList[customerIndex].img != "") {
+		$('#dialogCustomerImage').attr("src",demoScenario.customerList[customerIndex].img);
+	} else {
+		$('#dialogCustomerImage').attr("src","img/no_avatar.png");
+	}
+	
+	$("#customerInfoDialogCHTr > tr").remove();
+	$("#dialogCustomerInterests > div").remove();
 
 	readCustomerProfileFromRtdm(customerId);
 
@@ -234,11 +238,8 @@ function displayCustomerProfile(element) {
 function readCustomerProfileFromRtdm(customerId) {
 	var rtdmRequestUrl = "http://" + demoScenario.rtdmHost + "/SASDecisionServices/rest/runtime/decisions/" + demoScenario.rtdmEvent;
 	var contentType = 'application/vnd.sas.decision.request+json';
-	//var rtdmRequestUrl = "http://" + rtdmHost + ( rtdmPort != undefined ? ":" + rtdmPort : '') + "/SASDecisionServices/rest/runtime/decisionDefinitions/" + rtdmEvent; 
-	//var contentType = 'application/vnd.sas.decision.definition+json';
-	var rtdmRequest = {"version" : "", "clientTimeZone" : "", "inputs":{}};
-	rtdmRequest.clientTimeZone = "EST";
-	rtdmRequest.version= 1;
+	var rtdmRequest = {version : 1, clientTimeZone : "Europe/Berlin", "inputs":{}};
+
 	
 
 	rtdmRequest.inputs.MemberID = customerId;
@@ -252,34 +253,64 @@ function readCustomerProfileFromRtdm(customerId) {
 	})
 	.done(function( rtdmResponse ) {
 		console.log(rtdmResponse);
+
+		
+
+
+		var dataSetInterest = rtdmResponse.outputs["BeaconStatistics"][1].data;
+		var totalCategoryPct = 0;
+		var favoriteCategoryPct = 0;
+		var favoriteCategory = "";
+		var lastOffer = "";
+		var totalVisits = 0;
+		var lastOfferDt = undefined;
+		$.each(dataSetInterest, function(index) {
+			var categoryNm = dataSetInterest[index][2];
+			var categoryPct = Math.round(parseFloat(dataSetInterest[index][5]));
+			var categoryVisit = parseInt(dataSetInterest[index][3]);
+			totalCategoryPct+=categoryPct;
+			totalVisits+=categoryVisit;
+
+			if(categoryPct > favoriteCategoryPct) {
+				favoriteCategoryPct = categoryPct;
+				favoriteCategory = categoryNm;
+			}
+
+			// fix progressbar width due to use of round.
+			if((index+1) >= dataSetInterest.length) {
+				categoryPct += (100 - totalCategoryPct);
+			}
+
+			var interestHtml = "<div class='progress-bar' role='progressbar' aria-valuenow='"+categoryPct+"' aria-valuemin='0' aria-valuemax='100' style='width: "+categoryPct+"%;background-color: "+getRandomeDarkColor()+"; '>"+categoryNm+"</div>";
+			$("#dialogCustomerInterests").append(interestHtml);
+		});
+
+		var dataSetCH = rtdmResponse.outputs["ContactHistory"][1].data;
+		$.each(dataSetCH, function(index) {
+			var entryDate = new Date(dataSetCH[index][0]);
+
+			if(lastOfferDt == undefined || lastOfferDt < entryDate) {
+				lastOfferDt = entryDate;
+				lastOffer = dataSetCH[index][3];
+			}
+
+		    var newTabTrEntry = $("<tr></tr>");
+		    newTabTrEntry.append($("<td>" + $.format.date(entryDate, "dd.MM.yyyy HH:mm") + "</td>"));
+		    newTabTrEntry.append($("<td>" + dataSetCH[index][1] + "</td>"));
+		    newTabTrEntry.append($("<td>" + dataSetCH[index][2] + "</td>"));
+		    newTabTrEntry.append($("<td>" + dataSetCH[index][3] + "</td>"));
+		    newTabTrEntry.append($("<td>" + dataSetCH[index][4] + "</td>"));
+		    newTabTrEntry.append($("<td>" + dataSetCH[index][5] + "</td>"));	
+
+		    $("#customerInfoDialogCHTr").append(newTabTrEntry);
+		});
+
 		$('#dialogCustomerAvgTurnOver').html(rtdmResponse.outputs["AvgTurnover"]);
 		$('#dialogCustomerSegment').html(rtdmResponse.outputs["Segment"]);
 		$('#dialogCustomerVisitsLst4Weeks').html(rtdmResponse.outputs["VisitsLst4Weeks"]);
-		$('#dialogCustomerLstOffer').html(rtdmResponse.outputs["LstOffer"]);
-		
-		var dataSet = rtdmResponse.outputs["ContactHistory"][1].data;
-		$.each(dataSet, function(index) {
-			/*var tabRowObj = {
-		        "date":        dataSet[index][0],
-		        "campaign":    dataSet[index][1],	
-		        "segment":     dataSet[index][2],	
-		        "offer":     	dataSet[index][3],
-		       // "extInfo1":     dataSet[index][4],
-		       // "extInfo2":      dataSet[index][5]
-		    };
-
-		    console.log(tabRowObj);
-		    */
-
-		    var entryDate = new Date(dataSet[index][0]);
-		    var entryDateTxt = entryDate.getFullYear() + "-" + (entryDate.getMonth()+1) + "-" + entryDate.getDate() + " " + entryDate.getHours() + ":" + entryDate.getMinutes();
-		    contactHistoryTab.row.add([entryDateTxt, dataSet[index][1], dataSet[index][2], dataSet[index][3], dataSet[index][4], dataSet[index][5]]);
-		});
-
-		
-		contactHistoryTab.draw();
-		//contactHistoryTab = $('#customerInfoDialogCHTab').DataTable(
-
+		$('#dialogCustomerCurrentOffer').html(lastOffer);
+		$("#dialogCustomerTotalVisits").html(totalVisits);
+		$("#dialogCustomerFavCategory").html(favoriteCategory);
 	});
 }
 
@@ -297,3 +328,11 @@ function windowsResize(event) {
 }
 
 
+
+function connectToProvider(action, demoScenario) {
+	$.ajax({
+		method: "POST",
+		url: 'data/provider.php',
+		data: {action: action, param: demoScenario}
+	});
+}

@@ -78,4 +78,14 @@
 
 	.ui-dialog {
 		font-size: 0.8em;
+		z-index: 1000 !important ;
+	}
+
+	#dialogCustomerImage {
+		padding-bottom: 3px;
+
+	}
+
+	#dialogCustomerInterests {
+		margin-bottom: 5px;
 	}
