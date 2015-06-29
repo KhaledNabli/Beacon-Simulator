@@ -3,10 +3,7 @@
 var defaultDemoScenario = {};
 
 
-//var espBeaconWindow = "http://sasbap.demo.sas.com:44444/inject/PaybackPoc/PaybackUseCases/BeaconEventSource?blocksize=1";
-defaultDemoScenario.espBeaconWindow = "http://pdcesx06131.exnet.sas.com:8081/inject/BeaconDetection/InStoreQuery/BeaconServer?blocksize=1";
-defaultDemoScenario.espProfileWindow = "";
-
+defaultDemoScenario.espBeaconWindow = "http://sasbap.demo.sas.com:8081/inject/BeaconDetection/InStoreQuery/BeaconServer?blocksize=1";
 defaultDemoScenario.rtdmHost = "sasbap.demo.sas.com";
 defaultDemoScenario.rtdmEvent = "ESP_Beacon_Get_Customer_Profile";
 
@@ -21,8 +18,8 @@ defaultDemoScenario.currentStore = "rewe";
 defaultDemoScenario.storeList = [{id:"rewe", label:"Rewe Store", img:"img/storemap.png"}];
 
 defaultDemoScenario.customerList = [
-	{id:1, label: "Khaled", age: 29, color: "aquamarine", 	img: "img/lahm.jpg", 		mobilenr: "+41795095890"}, 
-	{id:2, label: "Claudia", age: 41, color: "aliceblue", 	img: "img/boateng.jpg", 	mobilenr: ""}, 
+	{id:1, label: "Khaled", age: 29, color: "aquamarine", 	img: "img/lahm.jpg", 		mobilenr: ""}, 
+	{id:2, label: "Claudio", age: 41, color: "aliceblue", 	img: "img/boateng.jpg", 	mobilenr: ""}, 
 	{id:3, label: "Roland", age: 37, color: "blanchedalmond",   img: "img/javi.jpg", 		mobilenr: ""},
 	{id:4, label: "Christian", age: 32, color: "honeydew", 	img: "img/alaba.jpg", 		mobilenr: ""},
 	{id:5, label: "Sigi", age: 27, color: "seashell", 		img: "img/frank.jpg", 		mobilenr: ""},
@@ -35,7 +32,7 @@ defaultDemoScenario.beaconList = [
 	{id:3, label: "Deli", 			position:{top: 40, left: 400}, size:{height: 180, width: 200}, color:"blue", store:"rewe"},
 	{id:4, label: "Rotisserie Chicken", position:{top: 310, left: 30}, size:{height: 210, width: 225}, color:"maroon", store:"rewe"},
 	{id:5, label: "Salad Bar", 		position:{top: 450, left: 740}, size:{height: 225, width: 250}, color:"orange", store:"rewe"},
-	{id:6, label: "Meat and Poletery", position:{top: 25, left: 600}, size:{height: 225, width: 250}, color:"darkorange", store:"rewe"},
+	{id:6, label: "Meat and Poultry", position:{top: 25, left: 600}, size:{height: 225, width: 250}, color:"darkorange", store:"rewe"},
 	{id:7, label: "Gourmet Cheeses",position:{top: 70, left: 920}, size:{height: 225, width: 250}, color:"darkblue", store:"rewe"},
 	{id:8, label: "Breads", 		position:{top: 290, left: 1220}, size:{height: 225, width: 250}, color:"brown", store:"rewe"},
 ];

@@ -1,135 +1,235 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>SAS Beacon Demo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="apple-touch-icon" href="images/sas_icon.png"/>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css" />
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/1.10.7/integration/jqueryui/dataTables.jqueryui.css" />
-    <!--link rel="stylesheet" type="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" /-->
-    <link href="css/style.css" rel="stylesheet">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>CI EMEA - Beacon and Geolocation Demo</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/sticky-footer.css" rel="stylesheet">
+  <style>
+#demoLinks,
+#checkServicesResult {
+  display: none;
+}
+  </style>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
-  </head>
+    </head>
 
-  <body> 
-    <!-- unsere seite -->
-    <div class="container">
+    <body>
+
+      <!-- Begin page content -->
+      <div class="container">
+        <div class="page-header">
+          <h1>Beacon and Geo Location Demo</h1>
+        </div>
+        <p class="lead">This website helps you to set up the demo quickly. Please follow the checklist to ensure that you have everything needed.</p>
+
+        <br />
+        <div class="row">
+            <ol type="1">
+              <li >
+                <h3>Get a personal demo image.</h3> 
+                <p>This demo is currently not on the GOLD image. <a href="mailto:mathias.bouten@sas.com;khaled.nabli@sas.com;" >Mathias or Khaled</a> can help you to get a copy.</p>
+              </li>
+              
+              <li>                
+                <h3>Start your Race image</h3> 
+                <p>Login to the Remote Desktop of your image (<b>User: sasdemo / Pass: Orion123</b>)</p>
+              </li>
+
+              <li>
+                <h3>Wait for RTDM to get started</h3> 
+                <p>Wait until all SAS Customer Intelligence Services are up and running.</p>
+              </li>
+
+              <li>
+                <h3>Start ESP</h3> 
+                <p>Start the script <b>01_StartESPServer_and_Demos.bat</b> (find it on the desktop)</p>
+              </li>
+              
+              <li>
+                <h3>Tell us your Server IP (or name)</h3> 
+                <p>And we make sure everything is up and running. Below are the required Links to your Demo.</p>
+              </li>
+            </ol>
+        </div>
 
 
         <div class="row">
-            <div id="storeMapWrapper" class="col-xs-12">
-                    <div id="customer-list" class="row">
-                        <!-- customer list apperas here -->
-                    </div>
-                <div id="storeMap">
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div id="config-panel">
-                            <span id="editDemoConfig" onclick="showConfigurator();"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></span>
-                            <span id="editBeaconPosition" onclick="makeBeaconsEditable();"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></span>
-                            <span id="saveBeaconPosition" onclick="saveBeaconPosition();"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
-                        </div>      
-                    </div>
-                </div>
-                <h1 id="infobox"></h1>
+          <div class="form">
+            <div class="form-group">
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="serverAdress" placeholder="racesx06035.demo.sas.com">
+              </div>
+              <div class="col-sm-2"> 
+                <button type="button" onclick="connectToRaceImage();" class="btn btn-success">Start</button>
+              </div>
             </div>
+          </div>
+        </div>
+        <br/>
+        <div class="row" id="checkServicesResult">
+          <div class="col-sm-4"><div id="serverStat" class="alert text-center"><h3>SERVER status unknown</h3></div></div>
+          <div class="col-sm-4"><div id="espStat" class="alert text-center"><h3>ESP status unknown</h3></div></div>
+          <div class="col-sm-4"><div id="rtdmStat" class="alert text-center"><h3>RTDM status unknown</h3></div></div>
         </div>
 
-    </div>
-
-    <div id="customerInfoDialog" title="Customer Profile" style="display: none;">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-2">
-                    <img id="dialogCustomerImage" class="avatarImg img-circle vcenter" src="img/lahm.jpg">
-                </div>
-                <div class="col-xs-10">
-                    <div class="row">
-                        <div class="col-xs-4"> 
-                            <p>Name: <span id="dialogCustomerName"> ... </span> </p>
-                        </div>
-                        <div class="col-xs-4">
-                            <p>Phone: <span id="dialogCustomerPhone"> ... </span> </p>
-                        </div>
-                        <div class="col-xs-4">
-                            <p>Total Visits: <span id="dialogCustomerTotalVisits"> ... </span> </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <p>Age: <span id="dialogCustomerAge"> ... </span> </p>
-                        </div>
-                        <div class="col-xs-4">
-                            <p>Segment: <span id="dialogCustomerSegment"> ... </span> </p>
-                        </div>
-                        <div class="col-xs-4">
-                            <p>Favorite: <span id="dialogCustomerFavCategory"> ... </span> </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <p>Avg Turnover: <span id="dialogCustomerAvgTurnOver"> ... </span> </p>
-                        </div>
-                        <div class="col-xs-4">
-                            <p>Purchases last Week: <span id="dialogCustomerVisitsLst4Weeks"> ... </span> </p>
-                        </div>
-                        <div class="col-xs-4">
-                            <p>Treatment: <span id="dialogCustomerCurrentOffer"> ... </span> </p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <div id="dialogCustomerInterests" class="progress">
-                </div>
-            </div>
-
-            <table id="customerInfoDialogCHTab" class="table table-condensed table-striped">
-
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Campaign</th>
-                        <th>Segment</th>
-                        <th>Offer</th>
-                        <th>Info 1</th>
-                        <th>Info 2</th>
-                    </tr>
-                </thead>
-                <tbody id="customerInfoDialogCHTr">
-
-                </tbody>
-
-            </table>
+        <br/>
+        <div class="row" id="demoLinks">
+          <div class="col-sm-6"><div class="alert alert-info text-center"><h4><a id="simulatorLink" target="_blank">Open Beacon Simulator</a></h4></div></div>
+          <div class="col-sm-6"><div class="alert alert-info text-center"><h4><a id="streamviewerLink" target="_blank">Open ESP Stream Viewer</a></h4></div></div>
         </div>
-    </div>
 
+      </div>
 
-    <div id="demoConfigurator"></div>
+      <footer class="footer">
+        <div class="container">
+          <p class="text-muted">Do you need help? <a href="http://sww.sas.com/blogs/wp/coeimm/" target="_blank">Visit your blog</a> to get the latest tutorial and documentation or leave us a comment. </a></p>
+        </div>
+      </footer>
+
     <script src="js/jquery-1.11.1.js" type="text/javascript"></script>
-    <script src="js/jquery-ui.js" type="text/javascript"></script>
-    <script src="js/jquery-dateFormat.min.js" type="text/javascript"></script>
-    <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js" type="text/javascript"></script>
-    <!--script src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js" type="text/javascript"></script-->
-    <script src="//cdn.datatables.net/plug-ins/1.10.7/integration/jqueryui/dataTables.jqueryui.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="js/jquery.ui.touch-punch.js"></script>
-    <script src="democonfig.js" type="text/javascript"></script>
-    <script src="js/configurator.js" type="text/javascript"></script>
-    <script src="js/main.js" type="text/javascript"></script>
-
     <script>
-        $(document).ready(function () {loadDemo();}); 
-        $(window).resize(function (event) {windowsResize(event);});
+        $(document).ready(function () {initDemoLauncher();}); 
+
+
+        function initDemoLauncher() {
+          if(window.localStorage.beaconDemoServer != undefined) {
+            $("#serverAdress").val(window.localStorage.beaconDemoServer);
+          }
+          
+          $("#checkServicesResult").hide();
+          $("#demoLinks").hide();
+        }
+
+
+        function connectToRaceImage() {
+          var serverAdress = $("#serverAdress").val();
+          if(serverAdress != "") {
+            window.localStorage.beaconDemoServer = serverAdress;
+            $("#checkServicesResult").show();
+            resetServiceStatus();
+            checkRaceImage(serverAdress);
+
+            $("#demoLinks").show();
+            $("#simulatorLink").attr("href", getSimuatorUrl(serverAdress));
+            $("#streamviewerLink").attr("href", getStreamviewerUrl(serverAdress));
+          }
+
+        }
+
+        function resetServiceStatus() {
+            $("#serverStat").html("<h3>Server status unknown</h3>");
+            $("#serverStat").removeClass("alert-danger");
+            $("#serverStat").removeClass("alert-success");
+
+            $("#espStat").html("<h3>ESP status unknown</h3>");
+            $("#espStat").removeClass("alert-danger");
+            $("#espStat").removeClass("alert-success");
+
+            $("#rtdmStat").html("<h3>RTDM status unknown</h3>");
+            $("#rtdmStat").removeClass("alert-danger");
+            $("#rtdmStat").removeClass("alert-success");
+        }
+
+
+        function checkRaceImage(serverAdress) {
+          return $.ajax({
+            method: "OPTIONS",
+            url: "http://" + serverAdress,
+          })
+          .done(function() {
+            console.log("Server Ping Success");
+            $("#serverStat").html("<h3>Race Image is up.</h3>");
+            $("#serverStat").removeClass("alert-danger");
+            $("#serverStat").addClass("alert-success");
+
+            checkESPService(serverAdress);
+            checkRTDMService(serverAdress);
+          })
+          .fail(function() {
+            console.log("Server Ping Failed");
+            $("#serverStat").html("<h3>Race Image not reachable.</h3>");
+            $("#serverStat").addClass("alert-danger");
+            $("#serverStat").removeClass("alert-success");
+          });
+
+        }
+
+        function checkESPService(serverAdress) {
+          $.ajax({
+            method: "GET",
+            url:  "http://" + serverAdress + ":8081/model/BeaconDetection/InStoreQuery/BeaconServer?blocksize=1",
+          })
+          .done(function(result) {
+            if(result.firstChild.childNodes.length > 1) {
+              console.log("ESP Ping Success");
+              $("#espStat").html("<h3>ESP Project is loaded.</h3>");
+              $("#espStat").removeClass("alert-danger");
+              $("#espStat").addClass("alert-success");
+            }
+            else {
+              console.log("ESP Ping Failed");
+              $("#espStat").html("<h3>ESP Project is missing.</h3>");
+              $("#espStat").addClass("alert-danger");
+              $("#espStat").removeClass("alert-success");
+            }
+            
+          })
+          .fail(function() {
+            console.log("ESP Ping Failed");
+            $("#espStat").html("<h3>ESP Server not reachable.</h3>");
+            $("#espStat").addClass("alert-danger");
+            $("#espStat").removeClass("alert-success");
+          });
+
+        }
+
+        function checkRTDMService(serverAdress) {
+          return $.ajax({
+            method: "OPTIONS",
+            contentType: "application/vnd.sas.decision.request+json",
+            url:  "http://" + serverAdress + "/SASDecisionServices/rest/runtime/decisions/ESP_Beacon_Get_Customer_Profile",
+          })
+          .done(function() {
+            console.log("RTDM Ping Success");
+            $("#rtdmStat").html("<h3>RTDM Server is up.</h3>");
+            $("#rtdmStat").removeClass("alert-danger");
+            $("#rtdmStat").addClass("alert-success");
+          })
+          .fail(function() {
+            console.log("RTDM Ping Failed");
+            $("#rtdmStat").html("<h3>RTDM Server not reachable.</h3>");
+            $("#rtdmStat").addClass("alert-danger");
+            $("#rtdmStat").removeClass("alert-success");
+          });
+        }
+
+          function getSimuatorUrl(serverAdress) {
+            return "http://gersasci61.ger.sas.com/beasim/simulator.html?server="+serverAdress;
+          }
+
+          function getStreamviewerUrl(serverAdress){
+            return "http://gersasci61.ger.sas.com/streamviewer/?server=http://"+serverAdress+":8081&v_0=window:BeaconDetection/InStoreQuery/BeaconServer;mode:updating;type:table;x:10;y:0;w:940;h:230;f:eventId,memberId,beaconId,memberNm,beaconNm,eventDttm,mobileNr,memberAge;t:BeaconServer&v_1=window:BeaconDetection/InStoreQuery/AggCustomerVisits;mode:updating;type:table;x:10;y:240;w:940;h:160;f:memberId,LstVisit,CntVisits,LstBeaconNm,LstBeaconId,CurrentMobileNr,LstMemberNm,LstMemberAge;t:AggCustomerVisits&v_2=window:BeaconDetection/InStoreQuery/SHOP_ENTERANCE;mode:updating;type:table;x:630;y:570;w:320;h:190;f:memberId,ESP_Window;t:SHOP_ENTERANCE&v_3=window:BeaconDetection/InStoreQuery/SHOW_INTEREST;mode:updating;type:table;x:10;y:570;w:610;h:190;f:memberId,beaconId,ESP_Window,CountVisits,memberNm,beaconNm;t:SHOW_INTEREST&v_4=window:BeaconDetection/InStoreQuery/AggBeaconVisits;mode:updating;type:table;x:10;y:410;w:938;h:150;f:memberId,beaconId,CountVisits,LastVisit,FirstVisit,memberNm,beaconNm;t:AggBeaconVisits";
+          }
     </script>
-</body>
-</html>
+
+    </body>
+    </html>

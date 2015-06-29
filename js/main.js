@@ -39,6 +39,14 @@ function loadConfiguration() {
 		demoScenario = JSON.parse(window.localStorage.demoScenario);
 	}
 	connectToProvider('', demoScenario);
+
+
+	var serverParam = getUrlParameter('server');
+	if(serverParam != undefined) {
+		console.log("Overwriting Server Parameter");
+		demoScenario.espBeaconWindow = "http://"+serverParam+":8081/inject/BeaconDetection/InStoreQuery/BeaconServer?blocksize=1";
+		demoScenario.rtdmHost = serverParam;
+	}
 	return demoScenario;
 }
 
@@ -129,6 +137,14 @@ function findObjectById(list, id) {
 	return -1;
 }
 
+function findObjectByLabel(list, label) {
+	for(i = 0; i < list.length; i++) {
+		if(list[i].label === label) return i;
+	}
+	return -1;
+}
+
+
 function processBeaconEvent(beaconId, customerId) {
 	console.log("processBeaconEvent(beaconId: " + beaconId + ", customerId: " + customerId + ");");
 	var customerIndex = findObjectById(demoScenario.customerList, customerId);
@@ -136,7 +152,7 @@ function processBeaconEvent(beaconId, customerId) {
 	if(customerIndex < 0 || beaconIndex < 0)
 		return;
 
-	//$("#infobox").html(demoScenario.customerList[customerIndex].label + " ist bei " + demoScenario.beaconList[beaconIndex].label + " angekommen");
+	$("#infobox").html(demoScenario.customerList[customerIndex].label + " has reached " + demoScenario.beaconList[beaconIndex].label + ".");
 
 	var espEventDttm = getCurrentTimestamp()
 	var espEventCsv = "i,n,,"+ (demoScenario.customerList[customerIndex].id) +","+ (demoScenario.beaconList[beaconIndex].id) +","+ (demoScenario.customerList[customerIndex].label) +"," + (demoScenario.beaconList[beaconIndex].label) +","+ espEventDttm+","+ (demoScenario.customerList[customerIndex].mobilenr) + ","+ (demoScenario.customerList[customerIndex].age) +"\r\n";
@@ -148,7 +164,7 @@ function processBeaconEvent(beaconId, customerId) {
 
 function getCurrentTimestamp() {
 	var currentDate = new Date();
-	return $.format.date(currentDate, "dd.MM.yyyy HH:mm");
+	return $.format.date(currentDate, "yyyy-MM-dd HH:mm:ss:SSS");
 }
 
 function parseDivId(divPrefix, divId) {
@@ -281,7 +297,7 @@ function readCustomerProfileFromRtdm(customerId) {
 				categoryPct += (100 - totalCategoryPct);
 			}
 
-			var interestHtml = "<div class='progress-bar' role='progressbar' aria-valuenow='"+categoryPct+"' aria-valuemin='0' aria-valuemax='100' style='width: "+categoryPct+"%;background-color: "+getRandomeDarkColor()+"; '>"+categoryNm+"</div>";
+			var interestHtml = "<div class='progress-bar' role='progressbar' aria-valuenow='"+categoryPct+"' aria-valuemin='0' aria-valuemax='100' style='width: "+categoryPct+"%;background-color: "+getBeaconColor(categoryNm)+"; '>"+categoryNm+"</div>";
 			$("#dialogCustomerInterests").append(interestHtml);
 		});
 
@@ -335,4 +351,29 @@ function connectToProvider(action, demoScenario) {
 		url: 'data/provider.php',
 		data: {action: action, param: demoScenario}
 	});
+}
+
+
+function getUrlParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}
+
+
+function getBeaconColor(beaconNm) {
+	var beaconIndex = findObjectByLabel(demoScenario.beaconList, beaconNm);
+	var beaconColor = getRandomeDarkColor();
+	if(beaconIndex >= 0) {
+		beaconColor = demoScenario.beaconList[beaconIndex].color;
+	}
+	return beaconColor;
 }
