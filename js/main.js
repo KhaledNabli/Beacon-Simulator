@@ -38,7 +38,7 @@ function loadConfiguration() {
 		console.log("Loading demoScenario from localStorage");
 		demoScenario = JSON.parse(window.localStorage.demoScenario);
 	}
-	connectToProvider('', demoScenario);
+	
 
 
 	var serverParam = getUrlParameter('server');
@@ -47,6 +47,8 @@ function loadConfiguration() {
 		demoScenario.espBeaconWindow = "http://"+serverParam+":8081/inject/BeaconDetection/InStoreQuery/BeaconServer?blocksize=1";
 		demoScenario.rtdmHost = serverParam;
 	}
+
+	connectToProvider('', demoScenario);
 	return demoScenario;
 }
 

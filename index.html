@@ -2,29 +2,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <title>Beacon and Geolocation Demo</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="icon" href="../../favicon.ico">
-
-  <title>CI EMEA - Beacon and Geolocation Demo</title>
-
+  <meta name="description" content="Beacon Demo Launcher">
+  <meta name="author" content="khaled nabli">
+  <link rel="icon" href="http://www.sas.com/etc/designs/saswww/favicon.ico">
   <!-- Bootstrap core CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
-
   <!-- Custom styles for this template -->
   <link href="css/sticky-footer.css" rel="stylesheet">
   <style>
-#demoLinks,
-#checkServicesResult {
-  display: none;
-}
+  #demoLinks,
+  #checkServicesResult {
+    display: none;
+  }
   </style>
 
-  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -96,11 +93,12 @@
           <div class="col-sm-6"><div class="alert alert-info text-center"><h4><a id="streamviewerLink" target="_blank">Open ESP Stream Viewer</a></h4></div></div>
         </div>
 
+
       </div>
 
       <footer class="footer">
         <div class="container">
-          <p class="text-muted">Do you need help? <a href="http://sww.sas.com/blogs/wp/coeimm/" target="_blank">Visit your blog</a> to get the latest tutorial and documentation or leave us a comment. </a></p>
+          <p class="text-muted"><a href="http://sww.sas.com/blogs/wp/coeimm/" target="_blank">Visit your blog</a> to get the latest tutorials and documentations.</a></p>
         </div>
       </footer>
 
@@ -121,7 +119,7 @@
 
 
         function connectToRaceImage() {
-          var serverAdress = $("#serverAdress").val();
+          var serverAdress = $("#serverAdress").val().trim();
           if(serverAdress != "") {
             window.localStorage.beaconDemoServer = serverAdress;
             $("#checkServicesResult").show();
@@ -227,7 +225,7 @@
           }
 
           function getStreamviewerUrl(serverAdress){
-            return "http://gersasci61.ger.sas.com/streamviewer/?server=http://"+serverAdress+":8081&v_0=window:BeaconDetection/InStoreQuery/BeaconServer;mode:updating;type:table;x:10;y:0;w:940;h:230;f:eventId,memberId,beaconId,memberNm,beaconNm,eventDttm,mobileNr,memberAge;t:BeaconServer&v_1=window:BeaconDetection/InStoreQuery/AggCustomerVisits;mode:updating;type:table;x:10;y:240;w:940;h:160;f:memberId,LstVisit,CntVisits,LstBeaconNm,LstBeaconId,CurrentMobileNr,LstMemberNm,LstMemberAge;t:AggCustomerVisits&v_2=window:BeaconDetection/InStoreQuery/SHOP_ENTERANCE;mode:updating;type:table;x:630;y:570;w:320;h:190;f:memberId,ESP_Window;t:SHOP_ENTERANCE&v_3=window:BeaconDetection/InStoreQuery/SHOW_INTEREST;mode:updating;type:table;x:10;y:570;w:610;h:190;f:memberId,beaconId,ESP_Window,CountVisits,memberNm,beaconNm;t:SHOW_INTEREST&v_4=window:BeaconDetection/InStoreQuery/AggBeaconVisits;mode:updating;type:table;x:10;y:410;w:938;h:150;f:memberId,beaconId,CountVisits,LastVisit,FirstVisit,memberNm,beaconNm;t:AggBeaconVisits";
+            return "http://gersasci61.ger.sas.com/streamviewer/?server=http://"+ serverAdress +":8081&v_0=window:BeaconDetection/InStoreQuery/BeaconServer;mode:updating;type:table;x:10;y:0;w:940;h:230;f:eventId,memberId,beaconId,memberNm,beaconNm,eventDttm,mobileNr,memberAge;t:BeaconServer&v_1=window:BeaconDetection/InStoreQuery/AggCustomerVisits;mode:updating;type:table;x:10;y:240;w:940;h:160;f:memberId,LstVisit,CntVisits,LstBeaconNm,LstBeaconId,CurrentMobileNr,LstMemberNm,LstMemberAge;t:AggCustomerVisits&v_2=window:BeaconDetection/InStoreQuery/SHOP_ENTERANCE;mode:updating;type:table;x:10;y:570;w:320;h:190;f:memberId,ESP_Window;t:SHOP_ENTERANCE&v_3=window:BeaconDetection/InStoreQuery/SHOW_INTEREST;mode:updating;type:table;x:340;y:570;w:610;h:190;options:title-SHOW_INTEREST;f:CountVisits,memberNm,beaconNm;t:SHOW_INTEREST&v_4=window:BeaconDetection/InStoreQuery/AggBeaconVisits;mode:updating;type:table;x:10;y:410;w:938;h:150;f:memberId,beaconId,CountVisits,LastVisit,FirstVisit,memberNm,beaconNm;t:AggBeaconVisits";
           }
     </script>
 

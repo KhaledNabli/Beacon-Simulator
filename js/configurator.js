@@ -78,7 +78,7 @@ function helpConfiguration() {
 function configAddCustomer(customerObj) {
 	var newEntry = customerObj == undefined || customerObj.id == undefined;
 	var color = (newEntry || customerObj.color == undefined) ? getRandomeColor() : customerObj.color;
-	var newEntryId = newEntry ? (9 + Math.ceil(99999 * Math.random())) : customerObj.id;
+	var newEntryId = newEntry ? configGetNextCustomerId() : customerObj.id;
 	htmlTag = "<tr style='background-color: " + color + "'" +">"
 		+"<td><input name='id' type='number' placeholder='ID' value='"+ (newEntry ? newEntryId : customerObj.id) +"'   class='form-control input-md'/>" +  "</td>"
 		+"<td><input name='label' type='text' placeholder='Label' value='"+ (newEntry ? "" : customerObj.label) +"'   class='form-control input-md'/>" +  "</td>"
@@ -92,6 +92,13 @@ function configAddCustomer(customerObj) {
 	return newEntry;
 }
 
+function configGetNextCustomerId() {
+	return $("#configuratorCustomerTbody tr").map(function() {
+		return parseInt($(this).find("input[name='id']").val());
+	}).toArray().reduce(function(previousValue, currentValue, index, array) {
+	 	return Math.max(currentValue, previousValue);
+	}) + 1;
+}
 
 function configGetCustomersFromUi() {
 	var customerList = [];
@@ -122,7 +129,7 @@ function configRemoveCustomer(element) {
 function configAddBeacon(beaconObj) {
 	var newEntry = beaconObj == undefined || beaconObj.id == undefined;
 	var color = (newEntry || beaconObj.color == undefined) ? getRandomeColor() : beaconObj.color;
-	var newEntryId = newEntry ? (9 + Math.ceil(99999 * Math.random())) : beaconObj.id;
+	var newEntryId = newEntry ? (9 + Math.ceil(100 * Math.random())) : beaconObj.id;
 
 	htmlTag = "<tr style='background-color: " + color + "'" +">"
 		+"<td><input name='id' type='number' placeholder='ID' value='"+ (newEntry ? newEntryId : beaconObj.id) +"'   class='form-control input-md'/>" +  "</td>"
